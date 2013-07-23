@@ -1,0 +1,29 @@
+<style>
+    td { background-color: green }
+    td.hasupdate { background-color: red }
+    td.empty { background-color: grey }
+</style>
+<table>
+    <tr>
+        <th>&nbsp;</th>
+        {% for node in node_list %}
+        <th>{{ node.name }}</th>
+        {% endfor %}
+    </tr>
+    {% for combo in ra %}
+    <tr>
+        <th>{{ combo.0.name }}</th>
+        {% for packagecheck in combo.1 %}
+        <td class="
+            {% if packagecheck.0.hasupdate %}hasupdate{% endif %}
+            {% if not packagecheck.0.current %}empty{% endif %}
+        ">
+        {% if packagecheck.0.current %}
+            Current: {{ packagecheck.0.current }}<br>
+            Latest: {{ packagecheck.0.latest }}
+        {% endif %}
+        </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>

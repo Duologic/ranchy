@@ -1,0 +1,11 @@
+test
+{% for row in dicti %}
+    
+    {% for cel in row %}
+    {% if forloop.parentloop.first %}
+    {{ cel.node.name }}
+    {% endif %}
+{{ cel.node.name }}
+
+    {% endfor %}
+{% endfor %}

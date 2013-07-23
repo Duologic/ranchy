@@ -1,0 +1,43 @@
+{% spaceless %}
+<style>
+    body { margin:0; }
+    thead th { top:0; position:fixed; z-index:1000; }
+    thead th { width:300px; height:20px; background-color:white; }
+    tbody { position:absolute; margin-top:20px; }
+    th,td { min-width: 300px; }
+    td { background-color: green; width:300px; height:100px; }
+    td.hasupdate { background-color: red }
+    td.empty { background-color: grey }
+</style>
+<table>
+    {% for key,row in dicti %}
+    {% if forloop.first %}
+<thead>
+    <tr>
+        <th>&nbsp;</th>
+        {{ row|dictsort:key }}
+        {% with intialleft=314 increase=304 %}
+        {% for key in row.keys %}
+        <th style="margin-left:4px; left:{% widthratio increase 1 forloop.counter %}px" class="col{{ forloop.counter }}">{{ key }}</th>
+        {% endfor %}
+        {% endwith %}
+    </tr>
+</thead>
+<tbody>
+    {% endif %}
+    <tr>
+        <th>{{ key }}</th>
+        {% for key,cel in row.items %}
+        <td class="{% if cel.hasupdate %}hasupdate{% endif %} {% if cel == None %}empty{% endif %}">
+        {% if cel != None %}
+            Package: {{ cel.package.name }}<br>
+            Current: {{ cel.current }}<br>
+            Latest: {{ cel.latest }}
+        {% endif %}
+        </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+{% endspaceless %}

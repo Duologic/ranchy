@@ -1,0 +1,128 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Matrix</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet" media="screen">
+        <script src="http://code.jquery.com/jquery.js"></script>
+        <style>
+            {% with height="30px" %}
+            body { margin:0; height:100%; width:100%; }
+
+            .matrixcontainer{ position:absolute; width:100%; height:100%; overflow:hidden; }
+            .matrixcontainer [class*=span] { margin-left:0; height:{{height}}; border:1px solid white; text-align:center; }
+            .matrixcontainer [class*=span].clearfirstcell { position:absolute; border:none; background-color:white;z-index:20000; width:15%; }
+
+            .matrixtop { position:absolute; top:0; left:0; overflow:hidden; width:100%; height:{{height}}; }
+            .matrixtop .row { width:-webkit-max-content; margin-left:15%; }
+
+            .matrixside { position:absolute; padding-top:{{height}}; left:0; overflow-y:auto; overflow:hidden; width:15%; height:100%; }
+            .matrixside .row { height:{{height}}; }
+            .matrixside .row:last-child { margin-bottom:10000px; } /* fix for scroll to bottom (Chrome) */
+            .matrixside .row [class*=span] { width:100%; border:1px solid white; background-color:#ccc; height:{{height}}; text-align:right; padding-right:10px; }
+
+            .matrixcontent { position:absolute; top:{{height}}; left:15%; width:85%; height:95%; overflow:auto; }
+            .matrixcontent .matrixcontentcontent { width:-webkit-max-content; }
+
+            .matrixcontent .row [class*=span]:first-child
+            { margin-left:20px; }
+
+            .matrixcontent .row [class*=span]           { background-color: #090; }
+            .matrixcontent .row [class*=span].hasupdate { background-color: #f33; }
+            .matrixcontent .row [class*=span].empty     { background-color: #ccc; }
+            {% endwith %}
+        </style>
+        <script>
+            $(function(){
+                $('.matrixcontent').height($('.matrixcontainer').innerHeight()-$('.matrixcontent').offset().top-1);
+                $(window).resize(function(){ 
+                    $('.matrixcontent').height($('.matrixcontainer').innerHeight()-$('.matrixcontent').offset().top-1);
+                });
+                $('.matrixcontent').scroll(function(){
+                    $('.matrixside').scrollTop($('.matrixcontent').scrollTop());
+                    $('.matrixtop').scrollLeft($('.matrixcontent').scrollLeft());
+                });
+                function toggleUptodate(){
+                    $('.matrixside .row').css('margin-bottom','auto');
+                    var anchorName = document.location.hash.substring(1);
+                    if(anchorName == "uptodatehide"){
+                        var package,lastpackage;
+                        $('.matrixcontent .row').each(function(){
+                            package = "."+$(this).attr("class").split(" ")[1];
+                            $(package).hide();
+                            $(this).children().each(function(){
+                                if($(this).hasClass('hasupdate')){
+                                    $(package).show();
+                                    lastpackage = package;
+                                }
+                            });
+                        });
+                        $('.matrixside '+lastpackage).css('margin-bottom','10000px');
+                    }else{
+                        $('.row').show();
+                        $('.matrixside .row:last-child').css('margin-bottom','10000px');
+                    }
+                }
+                window.onload = toggleUptodate;
+                window.onhashchange = toggleUptodate;
+            });
+        </script>
+    </head>
+    <body>
+{% for key,row in dicti %}
+    {% if forloop.first %}
+        <div class="matrixcontainer">
+            <div class="clearfirstcell span4"></div>
+            <div class="matrixtop">
+                <div class="row">
+        {% for key in row.keys %}
+                    <div class="span4">{{ key }}</div>
+        {% endfor %}
+                </div>
+            </div>
+    {% endif %}
+    {% empty %}
+{% endfor %}
+
+{% for key,row in dicti %}
+    {% if forloop.first %}
+            <div class="matrixside">
+    {% endif %}
+                <div class="row row{{forloop.counter0}}">
+                    <div class="span4">{{ key }}</div>
+                </div>
+    {% if forloop.last %}
+            </div>
+    {% endif %}
+    {% empty %}
+{% endfor %}
+
+{% for key,row in dicti %}
+    {% if forloop.first %}
+            <div class="matrixcontent">
+                <div class="matrixcontentcontent">
+    {% endif %}
+                <div class="row row{{forloop.counter0}}">
+    {% for key,cel in row.items %}
+                    <div class="span4 package {% if cel.hasupdate %}hasupdate{% endif %} {% if cel == None %}empty{% endif %}">
+        {% if cel != None %}
+                        <!-- Package: {{ cel.package.name }}<br>-->
+                        <!-- Node: {{ cel.node.name }}<br>-->
+                        <!-- Current: {{ cel.current }}<br>-->
+                        <!-- Latest: {{ cel.latest }}<br>-->
+                        {% if cel.hasupdate %}{{ cel.latest }}{% endif %}
+        {% endif %}
+                    </div>
+    {% endfor %}
+                </div>
+    {% if forloop.last %} 
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% empty %}
+    <p>The requested matrix is empty.</p>
+{% endfor %}
+</body>
+</html>

@@ -25,10 +25,10 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': normpath(join(DJANGO_ROOT, 'default.db')),
-        'USER': '',
-        'PASSWORD': '',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'ranchy',
+        'USER': 'root',
+        'PASSWORD': 'root',
         'HOST': '',
         'PORT': '',
     }
@@ -50,6 +50,8 @@ CACHES = {
 # See: https://github.com/django-debug-toolbar/django-debug-toolbar#installation
 INSTALLED_APPS += (
     'debug_toolbar',
+    'django.contrib.admin',
+    'farm',
 )
 
 # See: https://github.com/django-debug-toolbar/django-debug-toolbar#installation

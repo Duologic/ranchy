@@ -4,12 +4,11 @@ from farm.views import rest, matrix, node
 from rest_framework.urlpatterns import format_suffix_patterns
 
 urlpatterns = patterns('',
-# HTML views
+    # HTML views
         url(r'^matrix/(?P<typeslug>[^/]+)/$', matrix.index, name='matrixindex'),
         url(r'^matrix/(?P<typeslug>[^/]+)/(?P<nodeslug>[^/]+)/$', matrix.index, name='matrixindex'),
         url(r'^nodes/$', node.overview, name='nodeoverview'),
-
-# REST views
+    # REST views
         # owner
         url(r'^api/owner/$', rest.owner.OwnerList.as_view()),
         url(r'^api/owner/(?P<pk>\d+)/$', rest.owner.OwnerDetail.as_view()),
@@ -20,12 +19,11 @@ urlpatterns = patterns('',
         url(r'^api/node/(?P<slug>.+)/$', rest.node.NodeDetail.as_view()),
 
         # package
-        ## should become cached! too long to request each time
+        ## should become cached! too long to GET request each time
         url(r'^api/package/$', rest.package.PackageList.as_view()),
+        url(r'^api/package/bulk/$', rest.package.PackageBulk.as_view()),
         url(r'^api/package/(?P<pk>\d+)/$', rest.package.PackageDetail.as_view()),
         url(r'^api/package/(?P<slug>.+)/$', rest.package.PackageDetail.as_view()),
-        ## concept code, will test in near future
-        url(r'^api/packagebulk/$', rest.package.package_bulk),
 
         # packagecheck
         ## too big to request, should only be requested per node or per packageid

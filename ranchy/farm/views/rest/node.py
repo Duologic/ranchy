@@ -3,9 +3,11 @@ from rest_framework import generics
 from farm.models import Node
 from farm.serializers import NodeSerializer
 
+
 class NodeList(generics.ListCreateAPIView):
     queryset = Node.objects.all()
     serializer_class = NodeSerializer
+
 
 class NodeDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = NodeSerializer

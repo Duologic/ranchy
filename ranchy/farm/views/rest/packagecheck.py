@@ -3,6 +3,7 @@ from rest_framework import generics
 from farm.models import PackageCheck
 from farm.serializers import PackageCheckSerializer
 
+
 class PackageCheckList(generics.ListCreateAPIView):
     serializer_class = PackageCheckSerializer
 
@@ -13,6 +14,7 @@ class PackageCheckList(generics.ListCreateAPIView):
         if "packageid" in self.kwargs:
             queryset = queryset.filter(package=self.kwargs['packageid'])
         return queryset
+
 
 class PackageCheckDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PackageCheckSerializer

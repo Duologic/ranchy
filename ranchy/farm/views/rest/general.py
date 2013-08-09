@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from rest_framework.renderers import JSONRenderer
 
+
 class JSONResponse(HttpResponse):
     """
     An HttpResponse that renders it's content into JSON.

@@ -9,9 +9,11 @@ from farm.serializers import PackageSerializer
 from farm.views.rest.general import JSONResponse
 from rest_framework.parsers import JSONParser
 
+
 class PackageList(generics.ListCreateAPIView):
     queryset = Package.objects.all()
     serializer_class = PackageSerializer
+
 
 class PackageDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PackageSerializer
@@ -24,7 +26,9 @@ class PackageDetail(generics.RetrieveUpdateDestroyAPIView):
             queryset = queryset.filter(id=self.kwargs['pk'])
         return queryset
 
+
 class PackageBulk(APIView):
+
     def put(self, request):
         data = JSONParser().parse(request)
         queryset = Package.objects.all()

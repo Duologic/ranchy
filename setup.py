@@ -12,5 +12,4 @@ setup(name='ranchy',
       author='Jeroen Op \'t Eynde',
       author_email='jeroen.opteynde@mobilevikings.com',
       url='http://github.com/Duologic/ranchy',
-      packages=['ranchy'],
-     )
+      packages=['ranchy'],)

@@ -10,6 +10,7 @@ urlpatterns = patterns('',
                        url(r'^matrix/(?P<typeslug>[^/]+)/(?P<nodeslug>[^/]+)/$',
                            matrix.index, name='matrixindex'),
                        url(r'^nodes/$', node.overview, name='nodeoverview'),
+
                        # REST views
                        # owner
                        url(r'^api/owner/$', rest.owner.OwnerList.as_view()),
@@ -36,8 +37,8 @@ urlpatterns = patterns('',
                            rest.package.PackageDetail.as_view()),
 
                        # packagecheck
-                       # too big to request, should only be requested per node or per packageid
-                       ##url(r'^api/packagecheck/$', rest.packagecheck.PackageCheckList.as_view()),
+                       # GET request on first line return False by design
+                       url(r'^api/packagecheck/$', rest.packagecheck.PackageCheckList.as_view()),
                        url(r'^api/packagecheck/(?P<pk>\d+)/$',
                            rest.packagecheck.PackageCheckDetail.as_view()),
                        url(r'^api/packagecheck/(?P<nodeslug>.+)/(?P<packageid>\d+)/$',

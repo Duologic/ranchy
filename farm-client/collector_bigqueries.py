@@ -101,7 +101,11 @@ def delete_packagecheck(id):
 
 def handle_response(response):
     if response.status_code >= 200 or response.status_code <= 299:
-        return json.loads(response.text)
+        try:
+            return json.loads(response.text)
+        except:
+            print response.text
+            return False
     return False
 
 

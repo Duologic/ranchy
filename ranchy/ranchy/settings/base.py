@@ -190,6 +190,13 @@ DJANGO_APPS = (
     # Admin panel and documentation:
     'django.contrib.admin',
     # 'django.contrib.admindocs',
+
+    # plugins
+    'django_extensions',
+    'rest_framework',
+
+    # apps
+    'farm',
 )
 
 THIRD_PARTY_APPS = (
@@ -243,3 +250,8 @@ LOGGING = {
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
 WSGI_APPLICATION = '%s.wsgi.application' % SITE_NAME
 ########## END WSGI CONFIGURATION
+
+########## REST FRAMEWORK CONFIGURATION
+REST_FRAMEWORK = {
+        'PAGINATE_BY': 100,
+}

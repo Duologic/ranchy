@@ -1,21 +1,19 @@
-from rest_framework import generics
+from rest_framework import generics, viewsets
 
 from farm.models import Node
 from farm.serializers import NodeSerializer
 
 
-class NodeList(generics.ListCreateAPIView):
-    queryset = Node.objects.all()
+class NodeViewSet(viewsets.ModelViewSet):
     serializer_class = NodeSerializer
+    queryset = Node.objects.all()
 
 
-class NodeDetail(generics.RetrieveUpdateDestroyAPIView):
+class NodeBySlug(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = NodeSerializer
 
     def get_queryset(self):
-        queryset = Node.objects.all()
+        queryset = None 
         if "slug" in self.kwargs:
-            queryset = queryset.filter(slug=self.kwargs['slug'])
-        if "pk" in self.kwargs:
-            queryset = queryset.filter(id=self.kwargs['pk'])
+            queryset = Node.objects.filter(slug=self.kwargs['slug'])
         return queryset

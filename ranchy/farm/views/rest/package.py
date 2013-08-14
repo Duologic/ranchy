@@ -1,29 +1,24 @@
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.decorators import api_view
-
-from rest_framework import generics, status
+from rest_framework import generics, viewsets
 from rest_framework.views import APIView
+from rest_framework.parsers import JSONParser
 
 from farm.models import Package
 from farm.serializers import PackageSerializer
 from farm.views.rest.general import JSONResponse
-from rest_framework.parsers import JSONParser
 
 
-class PackageList(generics.ListCreateAPIView):
+class PackageViewSet(viewsets.ModelViewSet):
     queryset = Package.objects.all()
     serializer_class = PackageSerializer
 
 
-class PackageDetail(generics.RetrieveUpdateDestroyAPIView):
+class PackageBySlug(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PackageSerializer
 
     def get_queryset(self):
-        queryset = Package.objects.all()
+        queryset = None
         if "slug" in self.kwargs:
-            queryset = queryset.filter(slug=self.kwargs['slug'])
-        if "pk" in self.kwargs:
-            queryset = queryset.filter(id=self.kwargs['pk'])
+            queryset = Package.objects.queryset.filter(slug=self.kwargs['slug'])
         return queryset
 
 

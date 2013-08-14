@@ -1,7 +1,19 @@
-from django.conf.urls import patterns, url
-from farm.views import rest, matrix, node
+from django.conf.urls import patterns, url, include
+from farm.views import  matrix, servergram
+from farm.views.rest import genericviews, node, packagecheck, package
 
 from rest_framework.urlpatterns import format_suffix_patterns
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register(r'owner', genericviews.OwnerViewSet)
+router.register(r'location', genericviews.LocationViewSet)
+router.register(r'grouptype', genericviews.GroupTypeViewSet)
+router.register(r'group', genericviews.GroupViewSet)
+router.register(r'node', node.NodeViewSet)
+router.register(r'packagetype', genericviews.PackageTypeViewSet)
+router.register(r'package', genericviews.PackageTypeViewSet)
+router.register(r'packagecheck', genericviews.PackageTypeViewSet)
 
 urlpatterns = patterns('',
                        # HTML views
@@ -9,42 +21,27 @@ urlpatterns = patterns('',
                            matrix.index, name='matrixindex'),
                        url(r'^matrix/(?P<typeslug>[^/]+)/(?P<nodeslug>[^/]+)/$',
                            matrix.index, name='matrixindex'),
-                       url(r'^nodes/$', node.overview, name='nodeoverview'),
+                       url(r'^nodes/$', servergram.overview, name='nodeoverview'),
 
                        # REST views
-                       # owner
-                       url(r'^api/owner/$', rest.owner.OwnerList.as_view()),
-                       url(r'^api/owner/(?P<pk>\d+)/$',
-                           rest.owner.OwnerDetail.as_view()),
 
-                       # node
-                       url(r'^api/node/$', rest.node.NodeList.as_view()),
-                       url(r'^api/node/(?P<pk>\d+)/$',
-                           rest.node.NodeDetail.as_view()),
+                       # node by slug
                        url(r'^api/node/(?P<slug>.+)/$',
-                           rest.node.NodeDetail.as_view()),
+                           node.NodeBySlug.as_view()),
 
-                       # package
-                       # should become cached! too long to GET request each
-                       # time
-                       url(r'^api/package/$',
-                           rest.package.PackageList.as_view()),
+                       # custom package calls
                        url(r'^api/package/bulk/$',
-                           rest.package.PackageBulk.as_view()),
-                       url(r'^api/package/(?P<pk>\d+)/$',
-                           rest.package.PackageDetail.as_view()),
+                           package.PackageBulk.as_view()),
                        url(r'^api/package/(?P<slug>.+)/$',
-                           rest.package.PackageDetail.as_view()),
+                           package.PackageBySlug.as_view()),
 
                        # packagecheck
-                       # GET request on first line return False by design
-                       url(r'^api/packagecheck/$', rest.packagecheck.PackageCheckList.as_view()),
-                       url(r'^api/packagecheck/(?P<pk>\d+)/$',
-                           rest.packagecheck.PackageCheckDetail.as_view()),
-                       url(r'^api/packagecheck/(?P<nodeslug>.+)/(?P<packageid>\d+)/$',
-                           rest.packagecheck.PackageCheckList.as_view()),
+                       #url(r'^api/packagecheck/(?P<nodeslug>.+)/(?P<packageid>\d+)/$',
+                       #    packagecheck.PackageCheckList.as_view()),
                        url(r'^api/packagecheck/(?P<nodeslug>.+)/$',
-                           rest.packagecheck.PackageCheckList.as_view()),
-                       )
+                           packagecheck.PackageCheckByNode.as_view(), name='packagecheck-node'),
 
-urlpatterns = format_suffix_patterns(urlpatterns)
+                       url(r'^api/', include(router.urls)),
+                      )
+
+#urlpatterns = format_suffix_patterns(urlpatterns)

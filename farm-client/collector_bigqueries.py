@@ -85,14 +85,14 @@ def create_packagecheck(packagecheck):
 
 
 def update_packagecheck(packagecheck):
-    url = api_url + "packagecheck/%d" % packagecheck['id']
+    url = api_url + "packagecheck/%d" % packagecheck['url']
     data = json.dumps(packagecheck)
     response = requests.put(url, data, headers=api_headers)
     return handle_response(response)
 
 
-def delete_packagecheck(id):
-    url = api_url + "packagecheck/%d" % id
+def delete_packagecheck(url):
+#    url = api_url + "packagecheck/%d" % id
     response = requests.delete(url)
     if response.status_code == 204:
         return True
@@ -144,14 +144,14 @@ def bigmain():
             if not found:
                     raise Exception
 
-            localpackageinfo['package'] = found['id']
-            localpackageinfo['node'] = node['id']
+            localpackageinfo['package'] = found['url']
+            localpackageinfo['node'] = node['url']
             localpackageinfo['lastcheck'] = currentdatetime
 
             updated = False
             for remotepackagecheck in remotepackagechecks:
                 if remotepackagecheck['package'] == localpackageinfo['package']:
-                    localpackageinfo['id'] = remotepackagecheck['id']
+                    localpackageinfo['url'] = remotepackagecheck['url']
                     updated = update_packagecheck(localpackageinfo)
                     if not updated:
                         raise Exception
@@ -169,12 +169,12 @@ def bigmain():
             installed = False
 
             for localpackage in localpackages:
-                if remotepackagecheck['id'] == localpackages[localpackage]['id']:
+                if remotepackagecheck['url'] == localpackages[localpackage]['url']:
                     installed = True
                     break
 
             if not installed:
-                deleted = delete_packagecheck(remotepackagecheck['id'])
+                deleted = delete_packagecheck(remotepackagecheck['url'])
 
                 if not deleted:
                     raise Exception

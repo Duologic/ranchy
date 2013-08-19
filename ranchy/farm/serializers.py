@@ -14,7 +14,10 @@ class HyperlinkedIdentityField(serializers.HyperlinkedIdentityField):
         kwargs = {}
         for k, v in self.url_kwargs.iteritems():
             lookup_field = getattr(obj, k)
-            kwargs[v] = lookup_field
+            if hasattr(lookup_field, 'pk'):
+                kwargs[v] = lookup_field.pk
+            else:
+                kwargs[v] = lookup_field
         return reverse(view_name, kwargs=kwargs, request=request, format=format)
 
 
@@ -46,7 +49,7 @@ class NodeSerializer(serializers.HyperlinkedModelSerializer):
 
     packagechecks = HyperlinkedIdentityField(view_name='packagecheck-node',
                                              lookup_field='a',
-                                             url_kwargs={'slug':'nodeslug'})
+                                             url_kwargs={'slug':'nodeslug','location':'packageid'})
     class Meta:
         model = Node
 

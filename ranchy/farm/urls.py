@@ -36,7 +36,7 @@ urlpatterns = patterns('',
                            package.PackageBySlug.as_view()),
 
                        # packagecheck
-                       url(r'^api/packagecheck/(?P<nodeslug>.+)/$',
+                       url(r'^api/packagecheck/(?P<nodeslug>.+)/(?P<packageid>.+)/$',
                            packagecheck.PackageCheckByNode.as_view(), name='packagecheck-node'),
 
                        url(r'^api/', include(router.urls)),

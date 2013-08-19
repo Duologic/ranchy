@@ -12,8 +12,8 @@ router.register(r'grouptype', genericviews.GroupTypeViewSet)
 router.register(r'group', genericviews.GroupViewSet)
 router.register(r'node', node.NodeViewSet)
 router.register(r'packagetype', genericviews.PackageTypeViewSet)
-router.register(r'package', genericviews.PackageTypeViewSet)
-router.register(r'packagecheck', genericviews.PackageTypeViewSet)
+router.register(r'package', package.PackageViewSet)
+router.register(r'packagecheck', packagecheck.PackageCheckViewSet)
 
 urlpatterns = patterns('',
                        # HTML views
@@ -36,8 +36,6 @@ urlpatterns = patterns('',
                            package.PackageBySlug.as_view()),
 
                        # packagecheck
-                       #url(r'^api/packagecheck/(?P<nodeslug>.+)/(?P<packageid>\d+)/$',
-                       #    packagecheck.PackageCheckList.as_view()),
                        url(r'^api/packagecheck/(?P<nodeslug>.+)/$',
                            packagecheck.PackageCheckByNode.as_view(), name='packagecheck-node'),
 

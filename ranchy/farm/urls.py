@@ -1,19 +1,20 @@
 from django.conf.urls import patterns, url, include
 from farm.views import  matrix, servergram
-from farm.views.rest import genericviews, node, packagecheck, package
+from farm.views.rest import viewsets, package
 
-from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
-router.register(r'owner', genericviews.OwnerViewSet)
-router.register(r'location', genericviews.LocationViewSet)
-router.register(r'grouptype', genericviews.GroupTypeViewSet)
-router.register(r'group', genericviews.GroupViewSet)
-router.register(r'node', node.NodeViewSet)
-router.register(r'packagetype', genericviews.PackageTypeViewSet)
-router.register(r'package', package.PackageViewSet)
-router.register(r'packagecheck', packagecheck.PackageCheckViewSet)
+router.register(r'owner', viewsets.OwnerViewSet)
+router.register(r'location', viewsets.LocationViewSet)
+router.register(r'grouptype', viewsets.GroupTypeViewSet)
+router.register(r'group', viewsets.GroupViewSet)
+router.register(r'node', viewsets.NodeViewSet)
+router.register(r'packagetype', viewsets.PackageTypeViewSet)
+router.register(r'package', viewsets.PackageViewSet)
+router.register(r'package/bynode/(?P<nodeslug>.+)', viewsets.PackageViewSet)
+router.register(r'packagecheck', viewsets.PackageCheckViewSet)
+router.register(r'packagecheck/bynode/(?P<nodeslug>.+)', viewsets.PackageCheckViewSet)
 
 urlpatterns = patterns('',
                        # HTML views
@@ -25,21 +26,8 @@ urlpatterns = patterns('',
 
                        # REST views
 
-                       # node by slug
-                       url(r'^api/node/(?P<slug>.+)/$',
-                           node.NodeBySlug.as_view()),
-
-                       # custom package calls
                        url(r'^api/package/bulk/$',
                            package.PackageBulk.as_view()),
-                       url(r'^api/package/(?P<slug>.+)/$',
-                           package.PackageBySlug.as_view()),
-
-                       # packagecheck
-                       url(r'^api/packagecheck/(?P<nodeslug>.+)/(?P<packageid>.+)/$',
-                           packagecheck.PackageCheckByNode.as_view(), name='packagecheck-node'),
 
                        url(r'^api/', include(router.urls)),
                       )
-
-#urlpatterns = format_suffix_patterns(urlpatterns)

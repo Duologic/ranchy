@@ -1,25 +1,9 @@
-from rest_framework import generics, viewsets
 from rest_framework.views import APIView
 from rest_framework.parsers import JSONParser
 
 from farm.models import Package
 from farm.serializers import PackageSerializer
 from farm.views.rest.general import JSONResponse
-
-
-class PackageViewSet(viewsets.ModelViewSet):
-    queryset = Package.objects.all()
-    serializer_class = PackageSerializer
-
-
-class PackageBySlug(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = PackageSerializer
-
-    def get_queryset(self):
-        queryset = None
-        if "slug" in self.kwargs:
-            queryset = Package.objects.queryset.filter(slug=self.kwargs['slug'])
-        return queryset
 
 
 class PackageBulk(APIView):

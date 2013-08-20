@@ -12,14 +12,20 @@ class HyperlinkedIdentityField(serializers.HyperlinkedIdentityField):
 
     def get_url(self, obj, view_name, request, format):
         kwargs = {}
+
         for k, v in self.url_kwargs.iteritems():
-            lookup_field = getattr(obj, k)
-            if hasattr(lookup_field, 'pk'):
-                kwargs[v] = lookup_field.pk
+            if '__' in k:
+                (subobj, attr) = k.split('__')
+            else:
+                subobj = k
+                attr = '' 
+            lookup_field = getattr(obj, subobj)
+            if hasattr(lookup_field, attr):
+                kwargs[v] = getattr(lookup_field, attr)
             else:
                 kwargs[v] = lookup_field
-        return reverse(view_name, kwargs=kwargs, request=request, format=format)
 
+        return reverse(view_name, kwargs=kwargs, request=request, format=format)
 
 class OwnerSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -47,9 +53,10 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 
 class NodeSerializer(serializers.HyperlinkedModelSerializer):
 
-    packagechecks = HyperlinkedIdentityField(view_name='packagecheck-node',
-                                             lookup_field='a',
-                                             url_kwargs={'slug':'nodeslug','location':'packageid'})
+    packagecheck = HyperlinkedIdentityField(view_name='packagecheck-list',
+                                             url_kwargs={'slug':'nodeslug'})
+    package = HyperlinkedIdentityField(view_name='package-list',
+                                        url_kwargs={'slug':'nodeslug'})
     class Meta:
         model = Node
 

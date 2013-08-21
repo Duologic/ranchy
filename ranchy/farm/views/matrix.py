@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from farm.models import Node, Package, PackageCheck, PackageType
+from farm.models import Node, Package, PackageCheck
 
 
 def index(request, typeslug, nodeslug=''):

@@ -23,21 +23,12 @@ class LocationAdmin(admin.ModelAdmin):
 admin.site.register(Location, LocationAdmin)
 
 
-class GroupTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'notes',)
-
-admin.site.register(GroupType, GroupTypeAdmin)
-admin.site.register(Group)
-
-
 class NodeAdmin(admin.ModelAdmin):
     save_as = True
     list_display = ('name', 'location', 'owner')
     list_filter = ('location', 'owner')
 
 admin.site.register(Node, NodeAdmin)
-
-admin.site.register(PackageType)
 
 
 class PackageAdmin(admin.ModelAdmin):

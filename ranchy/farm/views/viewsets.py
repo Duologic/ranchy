@@ -1,16 +1,16 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
-from farm.models import Owner, Location, GroupType, Group, Node, PackageType, Package, PackageCheck
-from farm.serializers import OwnerSerializer, LocationSerializer, GroupTypeSerializer, GroupSerializer, NodeSerializer, PackageTypeSerializer, PackageSerializer, PackageCheckSerializer
+from farm.models import (Owner, Location, Node, Package, PackageCheck)
+from farm.serializers import (OwnerSerializer, LocationSerializer,
+                              NodeSerializer, PackageSerializer, PackageCheckSerializer)
 
 
 class BulkModelViewSet(viewsets.ModelViewSet):
-    
-    
+
     def create(self, request, *args, **kwargs):
         data = request.DATA
-        serializer = GroupTypeSerializer(data=data, many=True)
+        serializer = self.get_serializer(data=data, many=True)
 
         if serializer.is_valid():
             serializer.save()
@@ -18,11 +18,10 @@ class BulkModelViewSet(viewsets.ModelViewSet):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
     def put(self, request, *args, **kwargs):
         data = request.DATA
-        queryset = GroupType.objects.all()
-        serializer = GroupTypeSerializer(queryset, data=data, many=True)
+        queryset = self.queryset
+        serializer = self.get_serializer(queryset, data=data, many=True)
 
         if serializer.is_valid():
             serializer.save()
@@ -41,25 +40,10 @@ class LocationViewSet(BulkModelViewSet):
     serializer_class = LocationSerializer
 
 
-class GroupTypeViewSet(BulkModelViewSet):
-    queryset = GroupType.objects.all()
-    serializer_class = GroupTypeSerializer
-
-
-class GroupViewSet(BulkModelViewSet):
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
-
-
 class NodeViewSet(BulkModelViewSet):
     serializer_class = NodeSerializer
     queryset = Node.objects.all()
     lookup_field = 'slug'
-
-
-class PackageTypeViewSet(BulkModelViewSet):
-    queryset = PackageType.objects.all()
-    serializer_class = PackageTypeSerializer
 
 
 class PackageCheckViewSet(BulkModelViewSet):

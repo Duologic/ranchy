@@ -1,15 +1,12 @@
 from django.conf.urls import patterns, url, include
-from farm.views import  matrix, servergram, viewsets
+from farm.views import matrix, servergram, viewsets
 
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register(r'owner', viewsets.OwnerViewSet)
 router.register(r'location', viewsets.LocationViewSet)
-router.register(r'grouptype', viewsets.GroupTypeViewSet)
-router.register(r'group', viewsets.GroupViewSet)
 router.register(r'node', viewsets.NodeViewSet)
-router.register(r'packagetype', viewsets.PackageTypeViewSet)
 router.register(r'package', viewsets.PackageViewSet)
 router.register(r'package/bynode/(?P<nodeslug>.+)', viewsets.PackageViewSet)
 router.register(r'packagecheck', viewsets.PackageCheckViewSet)
@@ -23,4 +20,4 @@ urlpatterns = patterns('',
                        url(r'^nodes/$', servergram.overview, name='nodeoverview'),
 
                        url(r'^api/', include(router.urls)),
-                      )
+                       )

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework.reverse import reverse
-from farm.models import Owner, Location, GroupType, Group, Node, PackageType, Package, PackageCheck
+from farm.models import Owner, Location, Node, Package, PackageCheck
 
 
 class HyperlinkedIdentityField(serializers.HyperlinkedIdentityField):
@@ -39,18 +39,6 @@ class LocationSerializer(serializers.HyperlinkedModelSerializer):
         model = Location
 
 
-class GroupTypeSerializer(serializers.HyperlinkedModelSerializer):
-
-    class Meta:
-        model = GroupType
-
-
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
-
-    class Meta:
-        model = Group
-
-
 class NodeSerializer(serializers.HyperlinkedModelSerializer):
 
     packagecheck = HyperlinkedIdentityField(view_name='packagecheck-list',
@@ -59,12 +47,6 @@ class NodeSerializer(serializers.HyperlinkedModelSerializer):
                                         url_kwargs={'slug':'nodeslug'})
     class Meta:
         model = Node
-
-
-class PackageTypeSerializer(serializers.HyperlinkedModelSerializer):
-
-    class Meta:
-        model = PackageType
 
 
 class PackageSerializer(serializers.HyperlinkedModelSerializer):

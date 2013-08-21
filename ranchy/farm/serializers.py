@@ -40,9 +40,6 @@ class LocationSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class GroupTypeSerializer(serializers.HyperlinkedModelSerializer):
-#    def __init__(self, *args, **kwargs):
-#        many = kwargs.pop('many', True)
-#        super(GroupTypeSerializer, self).__init__(*args, **kwargs)
 
     class Meta:
         model = GroupType

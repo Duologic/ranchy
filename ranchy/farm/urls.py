@@ -1,6 +1,5 @@
 from django.conf.urls import patterns, url, include
-from farm.views import  matrix, servergram
-from farm.views.rest import viewsets, package
+from farm.views import  matrix, servergram, viewsets
 
 from rest_framework.routers import DefaultRouter
 
@@ -17,17 +16,11 @@ router.register(r'packagecheck', viewsets.PackageCheckViewSet)
 router.register(r'packagecheck/bynode/(?P<nodeslug>.+)', viewsets.PackageCheckViewSet)
 
 urlpatterns = patterns('',
-                       # HTML views
                        url(r'^matrix/(?P<typeslug>[^/]+)/$',
                            matrix.index, name='matrixindex'),
                        url(r'^matrix/(?P<typeslug>[^/]+)/(?P<nodeslug>[^/]+)/$',
                            matrix.index, name='matrixindex'),
                        url(r'^nodes/$', servergram.overview, name='nodeoverview'),
-
-                       # REST views
-
-                       url(r'^api/package/bulk/$',
-                           package.PackageBulk.as_view()),
 
                        url(r'^api/', include(router.urls)),
                       )

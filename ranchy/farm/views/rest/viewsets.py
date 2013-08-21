@@ -1,8 +1,36 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 
 from farm.models import Owner, Location, GroupType, Group, Node, PackageType, Package, PackageCheck
 from farm.serializers import OwnerSerializer, LocationSerializer, GroupTypeSerializer, GroupSerializer, NodeSerializer, PackageTypeSerializer, PackageSerializer, PackageCheckSerializer
+
+
+class BulkModelViewSet(viewsets.ModelViewSet):
+    
+    
+    def create(self, request, *args, **kwargs):
+        import pdb; pdb.set_trace()
+        data = request.DATA #JSONParser().parse(request)
+        serializer = GroupTypeSerializer(data=data, many=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def put(self, request, *args, **kwargs):
+        import pdb; pdb.set_trace()
+        data = request.DATA #JSONParser().parse(request)
+        queryset = GroupType.objects.all()
+        serializer = GroupTypeSerializer(queryset, data=data, many=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class OwnerViewSet(viewsets.ModelViewSet):
@@ -15,21 +43,9 @@ class LocationViewSet(viewsets.ModelViewSet):
     serializer_class = LocationSerializer
 
 
-class GroupTypeViewSet(viewsets.ModelViewSet):
+class GroupTypeViewSet(BulkModelViewSet):
     queryset = GroupType.objects.all()
     serializer_class = GroupTypeSerializer
-
-    def create(self, request, *args, **kwargs):
-        import pdb; pdb.set_trace()
-        data = request.DATA #JSONParser().parse(request)
-        queryset = GroupType.objects.all()
-        serializer = GroupTypeSerializer(data=data, many=True)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        else:
-            return Response(serializer.errors, status=400)
 
 
 class GroupViewSet(viewsets.ModelViewSet):

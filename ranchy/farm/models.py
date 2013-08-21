@@ -5,7 +5,7 @@ PACKAGETYPES = ( (1, 'apt'), (2, 'pip') )
 
 
 class Owner(models.Model):
-    slug = models.SlugField()
+    slug = models.SlugField(unique=True)
     name = models.CharField(max_length=200)
     contact = models.CharField(max_length=200, null=True, blank=True)
     mail = models.EmailField(max_length=200, null=True, blank=True)
@@ -17,7 +17,7 @@ class Owner(models.Model):
 
 
 class Location(models.Model):
-    slug = models.SlugField()
+    slug = models.SlugField(unique=True)
     name = models.CharField(max_length=200)
     owner = models.ForeignKey(Owner)
     address1 = models.CharField(max_length=200, null=True, blank=True)
@@ -31,7 +31,7 @@ class Location(models.Model):
 
 
 class Node(models.Model):
-    slug = models.SlugField()
+    slug = models.SlugField(unique=True)
     name = models.CharField(max_length=200)
     identifier = models.CharField(max_length=200)
     uri = models.URLField(max_length=1000, null=True, blank=True)
@@ -45,7 +45,7 @@ class Node(models.Model):
 
 
 class Package(models.Model):
-    slug = models.SlugField()
+    slug = models.SlugField(unique=True)
     name = models.CharField(max_length=200)
     packagetype = models.IntegerField(choices=PACKAGETYPES)
     notes = models.TextField(null=True, blank=True)

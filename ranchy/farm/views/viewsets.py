@@ -33,11 +33,13 @@ class BulkModelViewSet(viewsets.ModelViewSet):
 class OwnerViewSet(BulkModelViewSet):
     queryset = Owner.objects.all()
     serializer_class = OwnerSerializer
+    lookup_field = 'slug'
 
 
 class LocationViewSet(BulkModelViewSet):
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
+    lookup_field = 'slug'
 
 
 class NodeViewSet(BulkModelViewSet):
@@ -51,8 +53,9 @@ class PackageCheckViewSet(BulkModelViewSet):
     queryset = PackageCheck.objects.all()
 
     def get_queryset(self):
-        if "nodeslug" in self.kwargs:
-            return self.queryset.filter(node__slug=self.kwargs['nodeslug'])
+        nodeslug = self.request.QUERY_PARAMS.get('nodeslug', None)
+        if nodeslug is not None:
+            self.queryset = self.queryset.filter(node__slug=nodeslug)
         return self.queryset
 
 
@@ -62,6 +65,10 @@ class PackageViewSet(BulkModelViewSet):
     lookup_field = 'slug'
 
     def get_queryset(self):
-        if "nodeslug" in self.kwargs:
-            return self.queryset.filter(packagecheck__node__slug=self.kwargs['nodeslug'])
+        packagetype = self.request.QUERY_PARAMS.get('packagetype', None)
+        if packagetype is not None:
+            self.queryset = self.queryset.filter(packagetype=packagetype)
+        nodeslug = self.request.QUERY_PARAMS.get('nodeslug', None)
+        if nodeslug is not None:
+            self.queryset = self.queryset.filter(packagecheck__node__slug=nodeslug)
         return self.queryset

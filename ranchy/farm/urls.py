@@ -8,9 +8,7 @@ router.register(r'owner', viewsets.OwnerViewSet)
 router.register(r'location', viewsets.LocationViewSet)
 router.register(r'node', viewsets.NodeViewSet)
 router.register(r'package', viewsets.PackageViewSet)
-router.register(r'package/bynode/(?P<nodeslug>.+)', viewsets.PackageViewSet)
 router.register(r'packagecheck', viewsets.PackageCheckViewSet)
-router.register(r'packagecheck/bynode/(?P<nodeslug>.+)', viewsets.PackageCheckViewSet)
 
 urlpatterns = patterns('',
                        url(r'^matrix/(?P<typeslug>[^/]+)/$',

@@ -3,7 +3,8 @@ from rest_framework.response import Response
 
 from farm.models import (Owner, Location, Node, Package, PackageCheck)
 from farm.serializers import (OwnerSerializer, LocationSerializer,
-                              NodeSerializer, PackageSerializer, PackageCheckSerializer)
+                              NodeSerializer, PackageSerializer,
+                              PackageCheckSerializer)
 
 
 class BulkModelViewSet(viewsets.ModelViewSet):
@@ -53,6 +54,9 @@ class PackageCheckViewSet(BulkModelViewSet):
     queryset = PackageCheck.objects.all()
 
     def get_queryset(self):
+        package = self.request.QUERY_PARAMS.get('package', None)
+        if package is not None:
+            self.queryset = self.queryset.filter(package__slug=package)
         nodeslug = self.request.QUERY_PARAMS.get('nodeslug', None)
         if nodeslug is not None:
             self.queryset = self.queryset.filter(node__slug=nodeslug)

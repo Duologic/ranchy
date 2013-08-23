@@ -1,10 +1,11 @@
 from django.db import models
+from model_utils.models import TimeStampedModel
 
 
-PACKAGETYPES = ( (1, 'apt'), (2, 'pip') )
+PACKAGETYPES = ((1, 'apt'), (2, 'pip'))
 
 
-class Owner(models.Model):
+class Owner(TimeStampedModel):
     slug = models.SlugField(unique=True)
     name = models.CharField(max_length=200)
     contact = models.CharField(max_length=200, null=True, blank=True)
@@ -16,7 +17,7 @@ class Owner(models.Model):
         return self.name
 
 
-class Location(models.Model):
+class Location(TimeStampedModel):
     slug = models.SlugField(unique=True)
     name = models.CharField(max_length=200)
     owner = models.ForeignKey(Owner)
@@ -30,7 +31,7 @@ class Location(models.Model):
         return self.name + ' (' + self.city + ')'
 
 
-class Node(models.Model):
+class Node(TimeStampedModel):
     slug = models.SlugField(unique=True)
     name = models.CharField(max_length=200)
     identifier = models.CharField(max_length=200)
@@ -44,7 +45,7 @@ class Node(models.Model):
         return self.name + ' (' + str(self.location) + ')'
 
 
-class Package(models.Model):
+class Package(TimeStampedModel):
     slug = models.SlugField(unique=True)
     name = models.CharField(max_length=200)
     packagetype = models.IntegerField(choices=PACKAGETYPES)
@@ -54,13 +55,13 @@ class Package(models.Model):
         return self.name
 
 
-class PackageCheck(models.Model):
+class PackageCheck(TimeStampedModel):
     package = models.ForeignKey(Package)
     node = models.ForeignKey(Node)
     current = models.CharField(max_length=200)
     latest = models.CharField(max_length=200)
     hasupdate = models.NullBooleanField()
-    lastcheck = models.DateTimeField()
+    uninstalled = models.NullBooleanField()
     notes = models.TextField(null=True, blank=True)
 
     class Meta:

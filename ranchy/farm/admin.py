@@ -1,5 +1,5 @@
 from django.contrib import admin
-from farm.models import *
+from farm.models import Owner, Location, Node, Package, PackageCheck
 
 
 def duplicate_event(modeladmin, request, queryset):
@@ -40,8 +40,7 @@ admin.site.register(Package, PackageAdmin)
 
 class PackageCheckAdmin(admin.ModelAdmin):
     list_display = ('package', 'node', 'hasupdate')
-    list_filter = ('hasupdate', 'node', 'lastcheck')
+    list_filter = ('hasupdate', 'node')
     search_fields = ('package__name', )
-
 
 admin.site.register(PackageCheck, PackageCheckAdmin)

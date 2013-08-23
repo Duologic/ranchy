@@ -6,7 +6,8 @@ from farm.models import Owner, Location, Node, Package, PackageCheck
 
 class HyperlinkedQueryField(serializers.HyperlinkedIdentityField):
     """
-    HyperlinkedIdentityField with multiple lookup fields and possible query parameters.
+    HyperlinkedIdentityField with multiple lookup
+    fields and possible query parameters.
     """
     lookup_fields = None
     query_params = None
@@ -37,7 +38,10 @@ class HyperlinkedQueryField(serializers.HyperlinkedIdentityField):
         if self.query_params is not None:
             query_params = {}
             for k, v in self.query_params.iteritems():
-                lookup_field = getattr(obj, k)
+                if hasattr(obj, k):
+                    lookup_field = getattr(obj, k)
+                else:
+                    lookup_field = k
                 query_params[v] = lookup_field
 
             params = urllib.urlencode(query_params)
@@ -60,10 +64,10 @@ class LocationSerializer(serializers.HyperlinkedModelSerializer):
 
 class NodeSerializer(serializers.HyperlinkedModelSerializer):
 
-    packagecheck = HyperlinkedQueryField(view_name='packagecheck-list',
-                                         query_params={'slug': 'nodeslug'})
-    package = HyperlinkedQueryField(view_name='package-list',
-                                    query_params={'slug': 'nodeslug'})
+    url_packagecheck = HyperlinkedQueryField(view_name='packagecheck-list',
+                                             query_params={'slug': 'nodeslug'})
+    url_package = HyperlinkedQueryField(view_name='package-list',
+                                        query_params={'slug': 'nodeslug'})
 
     class Meta:
         model = Node

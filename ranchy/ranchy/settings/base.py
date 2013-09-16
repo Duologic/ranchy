@@ -184,6 +184,9 @@ DJANGO_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # Raven Sentry client
+    'raven.contrib.django',
+
     # Useful template tags:
     # 'django.contrib.humanize',
 
@@ -223,6 +226,10 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'root': {
+        'level': 'WARNING',
+        'handlers': ['sentry'],
+    },
     'filters': {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse'
@@ -233,7 +240,11 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
+        'sentry': {
+            'level': 'ERROR',
+            'class': 'raven.contrib.django.handlers.SentryHandler',
+        },
     },
     'loggers': {
         'django.request': {
@@ -255,3 +266,5 @@ WSGI_APPLICATION = '%s.wsgi.application' % SITE_NAME
 REST_FRAMEWORK = {
         'PAGINATE_BY': 100,
 }
+########## END REST FRAMEWORK CONFIGURATION
+

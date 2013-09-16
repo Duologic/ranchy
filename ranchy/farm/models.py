@@ -34,8 +34,6 @@ class Location(TimeStampedModel):
 class Node(TimeStampedModel):
     slug = models.SlugField(unique=True)
     name = models.CharField(max_length=200)
-    identifier = models.CharField(max_length=200)
-    uri = models.URLField(max_length=1000, null=True, blank=True)
     location = models.ForeignKey(Location)
     parents = models.ManyToManyField("self", null=True, blank=True)
     owner = models.ForeignKey(Owner)
